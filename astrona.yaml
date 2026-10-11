@@ -1,9 +1,9 @@
-# Preparation scaffold. Technical pages stay draft until authoring and review.
+# Reading-only content; YAML knowledge checks have a separate index.
 training:
   id: ATS078
   title: 'CNPA: Platform Observability, Security, and Conformance'
-  description: Preparation scaffold for Platform Observability, Security, and Conformance. Lessons and
-    environments are planned.
+  description: 'Detailed reading material and reusable YAML knowledge checks for CNPA: Platform Observability,
+    Security, and Conformance. Technical content remains draft. No labs or playgrounds.'
   certification:
     name: Certified Cloud Native Platform Engineering Associate
     code: CNPA
@@ -19,7 +19,7 @@ training:
 modules:
 - id: module-intro
   title: Introduction
-  description: Planned introduction and authoring status.
+  description: Audience, reading method and review process.
   content:
   - type: reading
     title: Introduction
@@ -35,51 +35,102 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
-  description: Planned coverage of this curriculum objective.
+  description: 'Developed reading and reasoning for Observability Fundamentals: Traces, Metrics, Logs,
+    and Events.'
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-010/README.md
   - type: reading
     title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
+    path: sections/section-010/README.md
+  - type: reading
+    title: Telemetry Signals, Resource Identity And Evidence Limits
     path: sections/section-010/module-01/course.md
+  - type: reading
+    title: Telemetry Signals, Resource Identity And Evidence Limits
+    path: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  - type: reading
+    title: Logs And Events As Evidence Beside Metrics
+    path: sections/section-010/module-01/course-02-logs-and-events-as-evidence-beside-metrics.md
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-01/course-03-summary.md
 - id: module-020
   title: Secure Service Communication
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Secure Service Communication.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-020/README.md
   - type: reading
     title: Secure Service Communication
+    path: sections/section-020/README.md
+  - type: reading
+    title: Service Mesh Identity And Policy
     path: sections/section-020/module-01/course.md
+  - type: reading
+    title: Transport Protection And Mesh Limits
+    path: sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+  - type: reading
+    title: PKI Trust And Certificate Verification
+    path: sections/section-020/module-01/course-02-pki-trust-and-certificate-verification.md
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-01/course-03-summary.md
 - id: module-030
   title: Policy Engines for Platform Governance
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Policy Engines for Platform Governance.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-030/README.md
   - type: reading
     title: Policy Engines for Platform Governance
+    path: sections/section-030/README.md
+  - type: reading
+    title: Admission Policy And Extension Trust
     path: sections/section-030/module-01/course.md
+  - type: reading
+    title: Admission As A Controlled Resource Decision
+    path: sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+  - type: reading
+    title: Applying Pod Security Requirements At Admission
+    path: sections/section-030/module-01/course-02-applying-pod-security-requirements-at-admission.md
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-01/course-03-summary.md
 - id: module-040
   title: Kubernetes Security Essentials
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Kubernetes Security Essentials.
+  draft: true
   content:
-  - type: reading
-    title: Section Overview
-    path: sections/section-040/README.md
   - type: reading
     title: Kubernetes Security Essentials
+    path: sections/section-040/README.md
+  - type: reading
+    title: Authorization And Effective Permissions
     path: sections/section-040/module-01/course.md
+  - type: reading
+    title: RBAC Grants And Their Consequences
+    path: sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  - type: reading
+    title: API Identity And ServiceAccounts
+    path: sections/section-040/module-01/course-02-api-identity-and-serviceaccounts.md
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-01/course-03-summary.md
 - id: module-050
   title: Security in CI/CD Pipelines
-  description: Planned coverage of this curriculum objective.
+  description: Developed reading and reasoning for Security in CI/CD Pipelines.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: Security in CI/CD Pipelines
     path: sections/section-050/README.md
   - type: reading
-    title: Security in CI/CD Pipelines
+    title: Supply Chain Trust And Verification
     path: sections/section-050/module-01/course.md
+  - type: reading
+    title: Artifact Evidence And Sensitive Build Inputs
+    path: sections/section-050/module-01/course-01-artifact-evidence-and-sensitive-build-inputs.md
+  - type: reading
+    title: Connecting Verification To Execution Policy
+    path: sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+  - type: reading
+    title: Summary
+    path: sections/section-050/module-01/course-03-summary.md

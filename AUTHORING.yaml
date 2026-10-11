@@ -1,0 +1,154 @@
+version: 1
+approval: CNPA requested 2026-10-11; established reading-only scope
+course:
+  id: ATS078
+  certification:
+    name: Certified Cloud Native Platform Engineering Associate
+    code: CNPA
+    provider: CNCF / Linux Foundation
+    domain: Platform Observability, Security, and Conformance
+    weight: 20
+    competencies:
+    - 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
+    - Secure Service Communication
+    - Policy Engines for Platform Governance
+    - Kubernetes Security Essentials
+    - Security in CI/CD Pipelines
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
+  curriculum_item: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Telemetry Signals, Resource Identity And Evidence Limits
+    objectives:
+    - Distinguish traces, metrics and logs by the questions they answer.
+    - Explain resource identity and signal correlation.
+    - Identify sampling, cardinality and collection gaps in evidence.
+    - Distinguish numerical series from individual event records.
+    - Design structured records with useful identity and timing.
+    - Correlate logs with metrics without confusing correlation with cause.
+    - Account for retention, sampling and sensitive data.
+    outline:
+    - Telemetry Signals, Resource Identity And Evidence Limits
+    - Logs And Events As Evidence Beside Metrics
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+      adapted_from: ATS073/sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+    - reading: sections/section-010/module-01/course-02-logs-and-events-as-evidence-beside-metrics.md
+      adapted_from: ATS047/sections/section-020/module-01/course-01-logs-and-events-as-evidence-beside-metrics.md
+- id: section-020
+  title: Secure Service Communication
+  curriculum_item: Secure Service Communication
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Service Mesh Identity And Policy
+    objectives:
+    - Distinguish encrypted transport, peer authentication and authorization.
+    - Explain where mesh components implement communication policy.
+    - Relate certificate rotation and hop boundaries to trust.
+    - Identify residual application and retry requirements.
+    - Explain public keys, private keys and certificate authority trust.
+    - Distinguish server authentication from mutual TLS.
+    - Relate identity names, validity and trust chains to verification.
+    - Describe rotation and compromise recovery for certificate-based identities.
+    outline:
+    - Transport Protection And Mesh Limits
+    - PKI Trust And Certificate Verification
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+      adapted_from: ATS045/sections/section-040/module-01/course-01-transport-protection-and-mesh-limits.md
+    - reading: sections/section-020/module-01/course-02-pki-trust-and-certificate-verification.md
+      adapted_from: ATS045/sections/section-050/module-01/course-01-pki-trust-and-certificate-verification.md
+- id: section-030
+  title: Policy Engines for Platform Governance
+  curriculum_item: Policy Engines for Platform Governance
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Admission Policy And Extension Trust
+    objectives:
+    - Distinguish mutation, validation and authorization.
+    - Explain built-in, declarative and webhook admission mechanisms.
+    - Relate failure policy and exemptions to effective enforcement.
+    - Identify extension credentials, transport and availability requirements.
+    - Distinguish enforce, warn and audit policy modes.
+    - Explain namespace policy labels and version selection.
+    - Predict the effect of policy changes on new workload Pods.
+    - Separate Pod Security Admission from RBAC and image verification.
+    outline:
+    - Admission As A Controlled Resource Decision
+    - Applying Pod Security Requirements At Admission
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+      adapted_from: ATS045/sections/section-070/module-01/course-01-admission-as-a-controlled-resource-decision.md
+    - reading: sections/section-030/module-01/course-02-applying-pod-security-requirements-at-admission.md
+      adapted_from: ATS043/sections/section-020/module-01/course-01-applying-pod-security-requirements-at-admission.md
+- id: section-040
+  title: Kubernetes Security Essentials
+  curriculum_item: Kubernetes Security Essentials
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Authorization And Effective Permissions
+    objectives:
+    - Compare Role, ClusterRole, RoleBinding and ClusterRoleBinding.
+    - Evaluate namespace scope, verbs, resources and subjects.
+    - Explain additive grants and indirect privilege.
+    - Apply least privilege to a workload identity.
+    - Distinguish established identity from granted API permission.
+    - Explain ServiceAccount token audience and lifetime.
+    - Identify unnecessary credential mounting and disclosure paths.
+    - Relate authentication failure to the actual credential mechanism.
+    outline:
+    - RBAC Grants And Their Consequences
+    - API Identity And ServiceAccounts
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+      adapted_from: ATS043/sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+    - reading: sections/section-040/module-01/course-02-api-identity-and-serviceaccounts.md
+      adapted_from: ATS043/sections/section-030/module-01/course-01-api-identity-and-serviceaccounts.md
+- id: section-050
+  title: Security in CI/CD Pipelines
+  curriculum_item: Security in CI/CD Pipelines
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Supply Chain Trust And Verification
+    objectives:
+    - Trace source, build, publication and deployment trust boundaries.
+    - Distinguish provenance, signatures, inventories and vulnerability findings.
+    - Relate admission decisions to exact artifact identity.
+    - Explain continued maintenance after an artifact is approved.
+    outline:
+    - Artifact Evidence And Sensitive Build Inputs
+    - Connecting Verification To Execution Policy
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-050/module-01/course-01-artifact-evidence-and-sensitive-build-inputs.md
+      adapted_from: ATS045/sections/section-010/module-01/course-01-artifact-evidence-and-sensitive-build-inputs.md
+    - reading: sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+      adapted_from: ATS045/sections/section-010/module-01/course-02-connecting-verification-to-execution-policy.md
