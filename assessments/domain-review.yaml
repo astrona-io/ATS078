@@ -1,0 +1,306 @@
+schema_version: 1
+kind: question_bank
+id: ats078-domain-review
+course_id: ATS078
+exam_code: CNPA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Platform Observability, Security, and Conformance
+placement:
+  position: after
+  reading: sections/section-050/module-01/course-03-summary.md
+questions:
+- id: ats078-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish traces, metrics and logs by the questions they answer.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Which signal most directly connects operations along a request path?
+  options:
+  - id: a
+    text: A single aggregate CPU gauge.
+    explanation: It does not identify the request path.
+  - id: b
+    text: A catalog display title.
+    explanation: It is software metadata rather than telemetry.
+  - id: c
+    text: A trace assembled from related spans.
+    explanation: Spans describe timed operations and their relationships.
+  correct_option: c
+  explanation: Spans describe timed operations and their relationships.
+- id: ats078-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain resource identity and signal correlation.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Why attach resource identity to telemetry?
+  options:
+  - id: a
+    text: To authorize all backend actions.
+    explanation: Identity attributes do not grant permission.
+  - id: b
+    text: To identify the producing service and environment consistently.
+    explanation: It supports meaningful grouping and correlation.
+  - id: c
+    text: To make every metric a complete request trace.
+    explanation: Signal models remain different.
+  correct_option: b
+  explanation: It supports meaningful grouping and correlation.
+- id: ats078-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify sampling, cardinality and collection gaps in evidence.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Why is an absent span insufficient to prove an operation never ran?
+  options:
+  - id: a
+    text: Sampling or collection loss may hide it.
+    explanation: The observation path has its own limits.
+  - id: b
+    text: Every span always reaches every backend.
+    explanation: Delivery is not universally guaranteed.
+  - id: c
+    text: Logs automatically recreate every discarded span.
+    explanation: Signals do not provide automatic reconstruction.
+  correct_option: a
+  explanation: The observation path has its own limits.
+- id: ats078-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish encrypted transport, peer authentication and authorization.
+  source_readings:
+  - sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+  prompt: Mutual TLS verifies service peers. Which decision remains separate?
+  options:
+  - id: a
+    text: Whether there are any peer identities.
+    explanation: Mutual TLS supplies defined identity evidence.
+  - id: b
+    text: Whether encryption can protect a configured hop.
+    explanation: It can, subject to the actual TLS contract.
+  - id: c
+    text: Permission for the requested application or user operation.
+    explanation: Authenticated identity does not authorize every action.
+  correct_option: c
+  explanation: Authenticated identity does not authorize every action.
+- id: ats078-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish encrypted transport, peer authentication and authorization.
+  source_readings:
+  - sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+  prompt: Does an authenticated mesh peer automatically have permission for every operation?
+  options:
+  - id: a
+    text: Yes; encryption removes all application rules.
+    explanation: Business policy still matters.
+  - id: b
+    text: No; authorization remains a separate policy.
+    explanation: Peer identity and permission answer different questions.
+  - id: c
+    text: Yes; a certificate grants every business action.
+    explanation: Identity does not imply unrestricted authority.
+  correct_option: b
+  explanation: Peer identity and permission answer different questions.
+- id: ats078-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate certificate rotation and hop boundaries to trust.
+  source_readings:
+  - sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+  prompt: Does encryption of one hop prove all later hops are encrypted?
+  options:
+  - id: a
+    text: No; each transport boundary needs its own protection contract.
+    explanation: Termination separates connections.
+  - id: b
+    text: Yes; ciphertext is inherited by all future connections.
+    explanation: Terminated encryption does not automatically continue.
+  - id: c
+    text: Yes; namespace naming provides encryption.
+    explanation: Names are not transport mechanisms.
+  correct_option: a
+  explanation: Termination separates connections.
+- id: ats078-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate failure policy and exemptions to effective enforcement.
+  source_readings:
+  - sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+  prompt: An identity can broaden the admission exception that applies to its workload. What should be
+    protected?
+  options:
+  - id: a
+    text: All workloads must receive the same broad exemption.
+    explanation: That expands rather than narrows the bypass.
+  - id: b
+    text: Only the image's display tag.
+    explanation: That does not constrain exception changes.
+  - id: c
+    text: Authority over the exception and policy configuration.
+    explanation: A control can be undermined through its own management boundary.
+  correct_option: c
+  explanation: A control can be undermined through its own management boundary.
+- id: ats078-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish mutation, validation and authorization.
+  source_readings:
+  - sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+  prompt: A webhook adds defaults, then another policy checks the final declaration. Which roles are represented?
+  options:
+  - id: a
+    text: Scheduling followed by datastore backup.
+    explanation: Neither describes the stated admission behavior.
+  - id: b
+    text: Mutation followed by validation.
+    explanation: Changing supported fields and accepting or rejecting them are distinct functions.
+  - id: c
+    text: Authentication followed by image building.
+    explanation: Those are different stages and responsibilities.
+  correct_option: b
+  explanation: Changing supported fields and accepting or rejecting them are distinct functions.
+- id: ats078-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain built-in, declarative and webhook admission mechanisms.
+  source_readings:
+  - sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+  prompt: A webhook excludes some namespaces from matching. What should be assessed?
+  options:
+  - id: a
+    text: Whether the effective coverage and exceptions fit the intended control.
+    explanation: Registration alone does not establish universal request coverage.
+  - id: b
+    text: Assume every request is still evaluated identically.
+    explanation: Matching scope determines which requests reach the rule.
+  - id: c
+    text: Only whether the service has a short name.
+    explanation: Naming does not prove coverage.
+  correct_option: a
+  explanation: Registration alone does not establish universal request coverage.
+- id: ats078-domain-review-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain additive grants and indirect privilege.
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A workload cannot directly read Secrets but can create a Pod mounting sensitive data under permissive
+    policy. What does this illustrate?
+  options:
+  - id: a
+    text: A universal rule that every Pod creator is always cluster-admin.
+    explanation: The route depends on actual grants and surrounding policy.
+  - id: b
+    text: That namespace scope removes every data path.
+    explanation: A namespaced operation can still have sensitive consequences.
+  - id: c
+    text: Indirect authority through permitted resource operations.
+    explanation: Effective access needs analysis beyond one direct verb.
+  correct_option: c
+  explanation: Effective access needs analysis beyond one direct verb.
+- id: ats078-domain-review-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compare Role, ClusterRole, RoleBinding and ClusterRoleBinding.
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A RoleBinding references a ClusterRole in one namespace. Which scope applies to the namespaced
+    grant?
+  options:
+  - id: a
+    text: Every namespace automatically.
+    explanation: A ClusterRoleBinding is the distinct cluster-wide arrangement.
+  - id: b
+    text: The RoleBinding's namespace.
+    explanation: Reusing a cluster-scoped definition does not make this binding cluster-wide.
+  - id: c
+    text: Only nodes carrying a matching label.
+    explanation: RBAC grant scope is not node placement selection.
+  correct_option: b
+  explanation: Reusing a cluster-scoped definition does not make this binding cluster-wide.
+- id: ats078-domain-review-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain additive grants and indirect privilege.
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A broad grant is removed from one role, but another binding still grants it. What is the effective
+    result?
+  options:
+  - id: a
+    text: The permission can remain because applicable grants combine.
+    explanation: RBAC is additive across applicable grants.
+  - id: b
+    text: The omitted rule explicitly denies every other grant.
+    explanation: Omission is not a general deny rule.
+  - id: c
+    text: The identity cannot authenticate anymore.
+    explanation: Permission changes do not necessarily revoke the credential's identity.
+  correct_option: a
+  explanation: RBAC is additive across applicable grants.
+- id: ats078-domain-review-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain continued maintenance after an artifact is approved.
+  source_readings:
+  - sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+  prompt: An image passed a scan last month, but a relevant vulnerability is disclosed today. What is
+    needed?
+  options:
+  - id: a
+    text: Assume the old result permanently approves it.
+    explanation: The risk context has changed.
+  - id: b
+    text: Only switching to a different tag name for the same bytes.
+    explanation: Renaming does not remediate content.
+  - id: c
+    text: Reassessment of affected deployed content and a maintenance response.
+    explanation: Historical evidence does not freeze future vulnerability knowledge.
+  correct_option: c
+  explanation: Historical evidence does not freeze future vulnerability knowledge.
+- id: ats078-domain-review-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace source, build, publication and deployment trust boundaries.
+  source_readings:
+  - sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+  prompt: A build process can publish images and administer production clusters. Which separation reduces
+    compromise impact?
+  options:
+  - id: a
+    text: Only changing the registry hostname spelling.
+    explanation: Naming does not alter permissions.
+  - id: b
+    text: Distinct scoped build and delivery identities.
+    explanation: The stages need different authority and should not unnecessarily share it.
+  - id: c
+    text: One permanent administrator token for every stage.
+    explanation: That combines trust boundaries and broadens exposure.
+  correct_option: b
+  explanation: The stages need different authority and should not unnecessarily share it.
+- id: ats078-domain-review-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish provenance, signatures, inventories and vulnerability findings.
+  source_readings:
+  - sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+  prompt: Provenance describes a build but has no trustworthy link to the selected artifact. What is missing?
+  options:
+  - id: a
+    text: Reliable producer trust and exact content association.
+    explanation: Plausible metadata alone does not establish assurance.
+  - id: b
+    text: A guarantee that every tag is immutable.
+    explanation: Tags can move unless policy supplies a restriction.
+  - id: c
+    text: A requirement that all provenance be application logs.
+    explanation: These records serve different purposes.
+  correct_option: a
+  explanation: Plausible metadata alone does not establish assurance.
