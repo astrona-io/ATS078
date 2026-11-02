@@ -37,7 +37,7 @@ modules:
   title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
   description: 'Developed reading and reasoning for Observability Fundamentals: Traces, Metrics, Logs,
     and Events.'
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
@@ -57,7 +57,7 @@ modules:
 - id: module-020
   title: Secure Service Communication
   description: Developed reading and reasoning for Secure Service Communication.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Secure Service Communication
@@ -77,7 +77,7 @@ modules:
 - id: module-030
   title: Policy Engines for Platform Governance
   description: Developed reading and reasoning for Policy Engines for Platform Governance.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Policy Engines for Platform Governance
@@ -97,7 +97,7 @@ modules:
 - id: module-040
   title: Kubernetes Security Essentials
   description: Developed reading and reasoning for Kubernetes Security Essentials.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Kubernetes Security Essentials
@@ -117,7 +117,7 @@ modules:
 - id: module-050
   title: Security in CI/CD Pipelines
   description: Developed reading and reasoning for Security in CI/CD Pipelines.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Security in CI/CD Pipelines
