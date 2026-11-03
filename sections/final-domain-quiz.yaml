@@ -1,0 +1,386 @@
+# Final domain knowledge check across all five sections.
+schema_version: 1
+kind: question_bank
+id: ats078-final
+course_id: ATS078
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: domain
+  id: platform-observability-security-conformance
+  title: Platform Observability, Security, and Conformance
+questions:
+- id: ats078-final-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Match each kind of data to the question it answers
+  source_readings:
+  - sections/section-010/module-01/course-01-metrics-logs-and-events-compared.md
+  prompt: The failed request counter of the `shop` rises. Which kind of data tells
+    you how many requests failed in the last minute, and which kind describes one
+    failed request?
+  options:
+  - id: a
+    text: A metric tells you how many, and a log describes one request.
+    explanation: Correct. A counter counts a whole group of events over time, and
+      a log record holds the detail of a single request.
+  - id: b
+    text: An event tells you how many, and a metric describes one request.
+    explanation: Events describe changes of resources, not requests.
+  - id: c
+    text: A metric tells you both, because a counter keeps every request.
+    explanation: A counter holds only a total and no detail about a single request.
+  - id: d
+    text: A log tells you how many, and a metric describes one request.
+    explanation: The roles are reversed. A log is one record for one event and does
+      not count anything on its own.
+  correct_option: a
+  explanation: Correct. A counter counts a whole group of events over time, and a
+    log record holds the detail of a single request.
+- id: ats078-final-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose the log fields that locate a record in time and place
+  source_readings:
+  - sections/section-010/module-01/course-02-structured-log-records-and-request-identifiers.md
+  prompt: Which set of fields lets you place a record on a timeline and tell which
+    pod wrote it?
+  options:
+  - id: a
+    text: "`route` and `user_id`"
+    explanation: These describe what was requested and by whom.
+  - id: b
+    text: "`level` and `message`"
+    explanation: These give the severity and a fixed text.
+  - id: c
+    text: "`status` and `duration_ms`"
+    explanation: These describe the request, not the time or the writer.
+  - id: d
+    text: "`ts` and `instance`"
+    explanation: Correct. `ts` gives the time in UTC and `instance` gives the pod
+      that wrote the record.
+  correct_option: d
+  explanation: Correct. `ts` gives the time in UTC and `instance` gives the pod that
+    wrote the record.
+- id: ats078-final-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name a stage where a log record can be lost
+  source_readings:
+  - sections/section-010/module-02/course-02-collection-sampling-and-retention.md
+  prompt: Which statement about the path of a container log is correct?
+  options:
+  - id: a
+    text: Standard output is never written to a file.
+    explanation: The container runtime writes standard output to a file on the node.
+  - id: b
+    text: "`kubectl logs` and a central store read the same data, so they always agree."
+    explanation: They read different places, and the central store only has what the
+      collector shipped.
+  - id: c
+    text: The kubelet rotates log files, a deleted pod loses its node files, and a
+      collector may drop records.
+    explanation: Correct. Rotation, pod deletion and collector limits can each remove
+      records before a search.
+  - id: d
+    text: A record that the application wrote is always stored for the full retention
+      period.
+    explanation: Retention is a maximum, and earlier stages can remove records sooner.
+  correct_option: c
+  explanation: Correct. Rotation, pod deletion and collector limits can each remove
+    records before a search.
+- id: ats078-final-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a workload identity
+  source_readings:
+  - sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
+  prompt: Which part of a workload certificate carries the identity that Istio policy
+    uses?
+  options:
+  - id: a
+    text: The Subject Alternative Name, as a `spiffe://` URI.
+    explanation: Correct. The SAN holds `spiffe://<trust domain>/ns/<namespace>/sa/<service
+      account>`.
+  - id: b
+    text: The pod IP address in the certificate subject.
+    explanation: Pod IPs change, so they are not the identity.
+  - id: c
+    text: The container image name.
+    explanation: The image is not part of the certificate.
+  - id: d
+    text: The name of the Deployment.
+    explanation: The identity comes from the service account, not the Deployment.
+  correct_option: a
+  explanation: Correct. The SAN holds `spiffe://<trust domain>/ns/<namespace>/sa/<service
+    account>`.
+- id: ats078-final-q05
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Write a port exception
+  source_readings:
+  - sections/section-020/module-01/course-02-mtls-modes-and-peer-authentication.md
+  prompt: What must a `PeerAuthentication` that sets `portLevelMtls` also have?
+  options:
+  - id: a
+    text: A namespace of `istio-system`.
+    explanation: The root namespace sets mesh-wide policy and is not required.
+  - id: b
+    text: A `when` condition.
+    explanation: PeerAuthentication has no `when` field.
+  - id: c
+    text: A `selector` that matches the workload, and the port number is the container
+      port.
+    explanation: Correct. Port-level settings need a selector and use the workload
+      port.
+  - id: d
+    text: A matching `Service` port number.
+    explanation: The setting uses the container port, not the Service port.
+  correct_option: c
+  explanation: Correct. Port-level settings need a selector and use the workload port.
+- id: ats078-final-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the cluster authorities
+  source_readings:
+  - sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  prompt: Why does a kubeadm cluster have a separate CA for etcd?
+  options:
+  - id: a
+    text: Because etcd cannot use TLS.
+    explanation: etcd uses TLS with its own CA.
+  - id: b
+    text: So a certificate signed by the cluster CA is not accepted by etcd, which
+      limits what a stolen certificate reaches.
+    explanation: Correct. Each authority signs a separate group of identities.
+  - id: c
+    text: To speed up API requests.
+    explanation: The split is for trust, not speed.
+  - id: d
+    text: To store service account tokens.
+    explanation: Service account tokens use a separate key pair.
+  correct_option: b
+  explanation: Correct. Each authority signs a separate group of identities.
+- id: ats078-final-q07
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Place admission in the request path
+  source_readings:
+  - sections/section-030/module-01/course-01-the-admission-chain-and-built-in-controllers.md
+  prompt: In which order do the stages of a request to the API server run?
+  options:
+  - id: a
+    text: Authentication, authorization, mutating admission, schema validation, validating
+      admission, storage.
+    explanation: Correct. Validation sees the object after mutation.
+  - id: b
+    text: Admission, authentication, authorization, storage.
+    explanation: Authentication and authorization come first.
+  - id: c
+    text: Authorization, authentication, validating admission, mutating admission.
+    explanation: Authentication runs before authorization, and mutation before validation.
+  - id: d
+    text: Authentication, mutating admission, authorization, storage.
+    explanation: Authorization runs before admission.
+  correct_option: a
+  explanation: Correct. Validation sees the object after mutation.
+- id: ats078-final-q08
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a Pod Security setup
+  source_readings:
+  - sections/section-030/module-01/course-02-pod-security-admission-and-validating-admission-policy.md
+  prompt: Where is the Pod Security level for a workload set?
+  options:
+  - id: a
+    text: In the securityContext of every Pod.
+    explanation: The securityContext holds settings that the level checks, not the
+      level.
+  - id: b
+    text: In labels on the namespace.
+    explanation: 'Correct. One label per mode: enforce, warn and audit.'
+  - id: c
+    text: In the Deployment annotations.
+    explanation: The level is read from the namespace.
+  - id: d
+    text: In the kubelet configuration.
+    explanation: The check runs in the API server.
+  correct_option: b
+  explanation: 'Correct. One label per mode: enforce, warn and audit.'
+- id: ats078-final-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find a rule that never runs
+  source_readings:
+  - sections/section-030/module-01/course-02-pod-security-admission-and-validating-admission-policy.md
+  prompt: A policy and a binding exist, and a violating Deployment is still admitted.
+    The binding selects namespaces with the label `admission=enforced`, and the namespace
+    has `admission=enforce`. What is the cause?
+  options:
+  - id: a
+    text: The CEL expression is wrong.
+    explanation: The expression is never evaluated when no namespace is selected.
+  - id: b
+    text: The policy must be created after the binding.
+    explanation: The order does not matter.
+  - id: c
+    text: The selector matches no namespace, so the rule never runs.
+    explanation: Correct. A selector that matches nothing disables the rule with no
+      error.
+  - id: d
+    text: Deployments are exempt from policies.
+    explanation: The policy matches Deployments.
+  correct_option: c
+  explanation: Correct. A selector that matches nothing disables the rule with no
+    error.
+- id: ats078-final-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare Role, ClusterRole, RoleBinding and ClusterRoleBinding
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A RoleBinding in namespace `starfleet` points at the ClusterRole `view`.
+    Where does the user get the permissions?
+  options:
+  - id: a
+    text: In every namespace
+    explanation: That would need a ClusterRoleBinding.
+  - id: b
+    text: Only in `starfleet`
+    explanation: Correct. A RoleBinding limits the ClusterRole rules to its own namespace.
+  - id: c
+    text: Only on cluster-scoped resources
+    explanation: A RoleBinding cannot grant cluster-scoped resources.
+  - id: d
+    text: Nowhere, because the role kinds do not match
+    explanation: A RoleBinding may reference a ClusterRole.
+  correct_option: b
+  explanation: This pattern reuses a rule list and limits its scope.
+- id: ats078-final-q11
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Identify verbs and bindings that allow privilege escalation
+  source_readings:
+  - sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  prompt: A user can create Pods in a namespace but cannot read Secrets. What can
+    they still do?
+  options:
+  - id: a
+    text: Nothing related to Secrets
+    explanation: A Pod can mount a Secret and expose it.
+  - id: b
+    text: Create a Pod that mounts a Secret and read the value from inside the container
+      or its logs
+    explanation: Correct. The Secret mount is part of the Pod body, which authorization
+      does not inspect.
+  - id: c
+    text: Decrypt etcd
+    explanation: Pod creation does not reach etcd.
+  - id: d
+    text: Change the Secret
+    explanation: Mounting does not allow writes.
+  correct_option: b
+  explanation: "`create pods` reads every Secret in the namespace."
+- id: ats078-final-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name the credential types the API server accepts
+  source_readings:
+  - sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  prompt: Which group does the API server add to every identity that passes authentication?
+  options:
+  - id: a
+    text: system:masters
+    explanation: This group is bound to cluster-admin and is not added automatically.
+  - id: b
+    text: system:authenticated
+    explanation: Correct. It is added to all authenticated identities.
+  - id: c
+    text: system:serviceaccounts
+    explanation: Only ServiceAccount identities have this group.
+  - id: d
+    text: system:nodes
+    explanation: This group is for kubelet identities.
+  correct_option: b
+  explanation: A binding to `system:authenticated` therefore reaches every authenticated
+    caller.
+- id: ats078-final-q13
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish a digest, a signature, provenance, an SBOM and a
+    vulnerability scan
+  source_readings:
+  - sections/section-050/module-01/course-01-artifact-evidence-and-sensitive-build-inputs.md
+  prompt: Which statement describes what an image signature proves?
+  options:
+  - id: a
+    text: A signer approved a specific image digest.
+    explanation: Correct. A signature binds a signer to a digest. It says nothing
+      about whether the code is free of defects.
+  - id: b
+    text: The image contains no known vulnerabilities.
+    explanation: A vulnerability scan answers that question, not a signature.
+  - id: c
+    text: The image was built from a reviewed commit.
+    explanation: Provenance describes the build, and only if the build system itself
+      is trusted.
+  - id: d
+    text: The image contains only the packages in its SBOM.
+    explanation: An SBOM lists contents but a signature does not verify that list.
+  correct_option: a
+  explanation: Correct. A signature binds a signer to a digest. It says nothing about
+    whether the code is free of defects.
+- id: ats078-final-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate evidence to the supply chain stage that it protects
+  source_readings:
+  - sections/section-050/module-01/course-01-artifact-evidence-and-sensitive-build-inputs.md
+  prompt: An attacker merges malicious code into the main branch through a phished
+    developer account. The pipeline then builds, signs and publishes the image. Which
+    statement is correct?
+  options:
+  - id: a
+    text: The signature check at deployment will fail because the code changed.
+    explanation: The pipeline signed the image legitimately, so the signature is valid.
+  - id: b
+    text: Every downstream check can pass, because the broken control was before the
+      build.
+    explanation: Correct. Digest, signature and scan results describe the built artifact.
+      A weakness in source control must be stopped by controls at that boundary.
+  - id: c
+    text: The vulnerability scan will always detect the new code.
+    explanation: A scan finds known vulnerabilities, not new malicious logic.
+  - id: d
+    text: Using tags instead of digests would have prevented it.
+    explanation: Tags are weaker identities and do not address a compromised source.
+  correct_option: b
+  explanation: Correct. Digest, signature and scan results describe the built artifact.
+    A weakness in source control must be stopped by controls at that boundary.
+- id: ats078-final-q15
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Pin a Deployment to a digest
+  source_readings:
+  - sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
+  prompt: Which image reference is pinned to exact content?
+  options:
+  - id: a
+    text: "`ghcr.io/stefanprodan/podinfo:latest`"
+    explanation: "`latest` is a tag and can move."
+  - id: b
+    text: "`ghcr.io/stefanprodan/podinfo:6.15.0`"
+    explanation: A version tag is still a movable name.
+  - id: c
+    text: "`ghcr.io/stefanprodan/podinfo@sha256:` followed by the 64 hexadecimal characters
+      of the digest"
+    explanation: Correct. A digest reference names the content, and the runtime refuses
+      content with another hash.
+  - id: d
+    text: "`podinfo`"
+    explanation: Without a tag the runtime uses `latest` on the default registry.
+  correct_option: c
+  explanation: Correct. A digest reference names the content, and the runtime refuses
+    content with another hash.

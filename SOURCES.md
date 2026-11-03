@@ -1,6 +1,6 @@
 # Primary Authoring Sources
 
-[Official CNPA objectives](https://training.linuxfoundation.org/certification/certified-cloud-native-platform-engineering-associate-cnpa/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation paths are recorded per reading in AUTHORING.yaml. No runtime or command-output validation is claimed.
+[Official CNPA objectives](https://training.linuxfoundation.org/certification/certified-cloud-native-platform-engineering-associate-cnpa/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation sources are recorded per module in AUTHORING.yaml. Labs and playgrounds are untested; no runtime or command-output validation is claimed.
 
 - [Platform capabilities and user outcomes](https://tag-app-delivery.cncf.io/whitepapers/platforms/)
 - [Platform maturity](https://tag-app-delivery.cncf.io/whitepapers/platform-eng-maturity-model/)
@@ -20,4 +20,4 @@
 - [OpenTelemetry signal models](https://opentelemetry.io/docs/concepts/signals/)
 - [NIST AI risk framework](https://www.nist.gov/itl/ai-risk-management-framework)
 
-Version-specific fields and options need confirmation against the intended deployed release before adding executable material. Configuration excerpts illustrate intent and do not claim installation or runtime results. Question banks are independently authored practice, not official examination items.
+Version-specific fields and options need confirmation against the intended deployed release before adding executable material. Lab and playground configuration is checked statically only. Question banks are independently authored practice, not official examination items.

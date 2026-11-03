@@ -1,21 +1,31 @@
 ---
 draft: true
 exam_objectives:
-- Policy Engines for Platform Governance
+- 'Policy Engines for Platform Governance'
 ---
 # Policy Engines for Platform Governance
 
-This section covers policy Engines for Platform Governance. It develops admission Policy And Extension Trust through mechanisms, examples, prerequisites and failure reasoning.
+This section covers admission control as the place where a platform enforces policy. It explains where admission sits in a request, Pod Security Admission and validating admission policy, and admission webhooks with their failure behavior and exceptions.
 
-Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains can include intermediate checkpoints before the final review.
+The section has one module. It has a playground, a graded lab and a capstone lab on a local kind cluster, and ends with a knowledge check. Each part is followed by the lab that practises it, and the module ends with a summary.
 
 ## Learning Outcomes
 
-- Distinguish mutation, validation and authorization.
-- Explain built-in, declarative and webhook admission mechanisms.
-- Relate failure policy and exemptions to effective enforcement.
-- Identify extension credentials, transport and availability requirements.
-- Distinguish enforce, warn and audit policy modes.
-- Explain namespace policy labels and version selection.
-- Predict the effect of policy changes on new workload Pods.
-- Separate Pod Security Admission from RBAC and image verification.
+- Place admission in the request path and tell it apart from authorization
+- Enforce a Pod Security level with namespace labels
+- Write a validating admission policy and a binding with the right action and scope
+- Explain how failure policy, selectors and exceptions decide real coverage
+- Test a rule with a server-side dry run
+
+## Contents
+
+| Item | What it is |
+| --- | --- |
+| The Admission Chain And Built-In Controllers; Pod Security Admission And Validating Admission Policy; Admission Webhooks, Failure And Exceptions | Reading parts |
+| Enforce A Pod Standard And Write A Validation Policy | Graded module lab (intermediate) |
+| Close The Admission Gaps In Starfleet | Section capstone lab (advanced) |
+| Knowledge check | `quiz.yaml`, pass score 70 |
+
+## Authoring Status
+
+The labs and the playgrounds in this section are UNTESTED. They were built from documentation and checked only with static tools (`astrona validate`, `bash -n`, YAML parsing).

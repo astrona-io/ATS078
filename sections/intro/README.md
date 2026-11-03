@@ -1,3 +1,5 @@
 # Introduction
 
-This introduction explains the Platform Observability, Security, and Conformance course, reading method and author review. The domain represents 20% of Certified Cloud Native Platform Engineering Associate (CNPA) and belongs to ATP016. Read the welcome, requirements and authoring explanation before the technical sections.
+This introduction explains how to use the Platform Observability, Security, and Conformance course. Welcome To The Course describes the audience, learning outcomes and the layout of each section. Get Your Machine Ready lists the tools and `astrona` commands that the playgrounds and labs need. How This Course Is Made describes author checks, the untested state of the labs, contributions and the license.
+
+The course starts with observability: metrics, logs and events.

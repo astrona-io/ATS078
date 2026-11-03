@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Authentication And Workload Credentials (LAB). Graded against the live cluster. Approve a CSR and remove unneeded workload credentials.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-078-lab-040-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state, including the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by astrona test: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: mira-certificate
+      description: CSR mira-csr is approved and issued a certificate for CN=mira, O=crew
+      type: file
+      source: validation/validate-mira-certificate.sh
+      hint: Read the pending request with kubectl get csr, then approve mira-csr.
+    - name: automount-disabled
+      description: ServiceAccount scout-sa disables automounting
+      type: file
+      source: validation/validate-automount-disabled.sh
+      hint: Set automountServiceAccountToken to false on the ServiceAccount object.
+    - name: scout-has-no-token
+      description: Running pods of scout have no ServiceAccount token volume
+      type: file
+      source: validation/validate-scout-has-no-token.sh
+      hint: Existing pods keep their volumes. Restart the Deployment after you change the ServiceAccount.
+    - name: legacy-secret-removed
+      description: The legacy token Secret scout-sa-token is deleted
+      type: file
+      source: validation/validate-legacy-secret-removed.sh
+      hint: List Secrets of type kubernetes.io/service-account-token in bridge and delete the one that belongs to scout-sa.
+    - name: scout-intact
+      description: scout still uses scout-sa and is available
+      type: file
+      source: validation/validate-scout-intact.sh
+      hint: Do not delete the Deployment or change its ServiceAccount name.
+
+teardown:
+  keepCluster: false

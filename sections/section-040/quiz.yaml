@@ -1,0 +1,392 @@
+# Knowledge check for section 040. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats078-040
+course_id: ATS078
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-040
+  title: Kubernetes Security Essentials
+questions:
+- id: ats078-040-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare Role, ClusterRole, RoleBinding and ClusterRoleBinding
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A RoleBinding in namespace `starfleet` points at the ClusterRole `view`.
+    Where does the user get the permissions?
+  options:
+  - id: a
+    text: In every namespace
+    explanation: That would need a ClusterRoleBinding.
+  - id: b
+    text: Only in `starfleet`
+    explanation: Correct. A RoleBinding limits the ClusterRole rules to its own namespace.
+  - id: c
+    text: Only on cluster-scoped resources
+    explanation: A RoleBinding cannot grant cluster-scoped resources.
+  - id: d
+    text: Nowhere, because the role kinds do not match
+    explanation: A RoleBinding may reference a ClusterRole.
+  correct_option: b
+  explanation: This pattern reuses a rule list and limits its scope.
+- id: ats078-040-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Evaluate the effective permissions of an identity
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: A user is bound to a Role that allows `get pods` and to another Role that
+    allows `delete pods`. Which statement is correct?
+  options:
+  - id: a
+    text: The user can only get pods, because the first grant wins.
+    explanation: Grants are not ordered.
+  - id: b
+    text: The user can get and delete pods, because RBAC rules only add.
+    explanation: Correct. The effective permissions are the union of all matching
+      rules.
+  - id: c
+    text: The binding is rejected as a conflict.
+    explanation: Conflicts do not exist in RBAC.
+  - id: d
+    text: The user can delete pods only if a deny rule exists.
+    explanation: RBAC has no deny rules.
+  correct_option: b
+  explanation: There is no deny. Remove or narrow a grant to remove a permission.
+- id: ats078-040-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Evaluate the effective permissions of an identity
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: 'A rule lists `resources: ["pods"]` and `verbs: ["get"]`. Can the user read
+    pod logs with it?'
+  options:
+  - id: a
+    text: Yes, logs are part of pods.
+    explanation: Logs are the subresource pods/log.
+  - id: b
+    text: No. The subresource `pods/log` must be named in the rule.
+    explanation: Correct. Subresources are matched literally.
+  - id: c
+    text: Yes, but only through `kubectl logs`.
+    explanation: The API does not care which tool is used.
+  - id: d
+    text: Only when `resourceNames` is set.
+    explanation: resourceNames does not add subresources.
+  correct_option: b
+  explanation: Name each subresource that you want to allow.
+- id: ats078-040-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Evaluate the effective permissions of an identity
+  source_readings:
+  - sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
+  prompt: Which command shows whether the user `mira` may delete pods in `starfleet`,
+    without logging in as her?
+  options:
+  - id: a
+    text: "`kubectl auth can-i delete pods -n starfleet --as=mira`"
+    explanation: Correct. Impersonation lets an administrator test another identity.
+  - id: b
+    text: "`kubectl get role mira`"
+    explanation: There is no Role named after a user.
+  - id: c
+    text: "`kubectl describe user mira`"
+    explanation: Kubernetes has no User object.
+  - id: d
+    text: "`kubectl auth whoami --as=mira -n starfleet`"
+    explanation: whoami shows an identity, not permissions.
+  correct_option: a
+  explanation: Use `--as` and `--as-group` to test an identity.
+- id: ats078-040-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify verbs and bindings that allow privilege escalation
+  source_readings:
+  - sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  prompt: Why is `list` on `secrets` as strong as `get` on every Secret in the namespace?
+  options:
+  - id: a
+    text: A list response contains the full objects, including their data.
+    explanation: Correct. List returns every Secret value.
+  - id: b
+    text: "`list` implies `delete`."
+    explanation: It does not.
+  - id: c
+    text: Secrets are encrypted so `list` is harmless.
+    explanation: The API returns decoded data to authorized callers.
+  - id: d
+    text: "`list` bypasses authentication."
+    explanation: It does not.
+  correct_option: a
+  explanation: Grant `get` on named Secrets only, or no access.
+- id: ats078-040-q06
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Identify verbs and bindings that allow privilege escalation
+  source_readings:
+  - sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  prompt: A user can create Pods in a namespace but cannot read Secrets. What can
+    they still do?
+  options:
+  - id: a
+    text: Nothing related to Secrets
+    explanation: A Pod can mount a Secret and expose it.
+  - id: b
+    text: Create a Pod that mounts a Secret and read the value from inside the container
+      or its logs
+    explanation: Correct. The Secret mount is part of the Pod body, which authorization
+      does not inspect.
+  - id: c
+    text: Decrypt etcd
+    explanation: Pod creation does not reach etcd.
+  - id: d
+    text: Change the Secret
+    explanation: Mounting does not allow writes.
+  correct_option: b
+  explanation: "`create pods` reads every Secret in the namespace."
+- id: ats078-040-q07
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Identify verbs and bindings that allow privilege escalation
+  source_readings:
+  - sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  prompt: Which verbs let a user bypass the check that prevents creating a role stronger
+    than the user's own?
+  options:
+  - id: a
+    text: "`get` and `list`"
+    explanation: These only read.
+  - id: b
+    text: "`escalate` and `bind`"
+    explanation: Correct. `escalate` allows writing stronger rules; `bind` allows
+      binding a stronger role.
+  - id: c
+    text: "`patch` and `update`"
+    explanation: These are checked by escalation prevention.
+  - id: d
+    text: "`watch` and `proxy`"
+    explanation: These do not affect role creation.
+  correct_option: b
+  explanation: Treat `escalate`, `bind` and `impersonate` as cluster administrator.
+- id: ats078-040-q08
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Apply least privilege to a user and a workload identity
+  source_readings:
+  - sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  prompt: What does a binding to the group `system:authenticated` reach?
+  options:
+  - id: a
+    text: Only human users
+    explanation: ServiceAccounts count as authenticated.
+  - id: b
+    text: Every identity that passed authentication, including every ServiceAccount
+    explanation: Correct. The group is far wider than it looks.
+  - id: c
+    text: Only users with certificates
+    explanation: Tokens count as well.
+  - id: d
+    text: Anonymous callers
+    explanation: Those belong to `system:unauthenticated`.
+  correct_option: b
+  explanation: Avoid binding roles to broad groups.
+- id: ats078-040-q09
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish authentication failure from authorization failure
+  source_readings:
+  - sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  prompt: A request returns `403 Forbidden` and the message names `User "system:serviceaccount:starfleet:default"`.
+    What does this tell you?
+  options:
+  - id: a
+    text: Authentication failed because the token expired.
+    explanation: Authentication failure returns 401, not 403.
+  - id: b
+    text: Authentication succeeded and authorization refused the identity.
+    explanation: Correct. A 403 names a known identity that lacks permission.
+  - id: c
+    text: The admission controller rejected the object.
+    explanation: Admission rejections have their own error text, such as a policy
+      message.
+  - id: d
+    text: The API server is unreachable.
+    explanation: An unreachable API server returns no HTTP status.
+  correct_option: b
+  explanation: 401 means authentication failed. 403 means the identity is known and
+    not permitted.
+- id: ats078-040-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the credential types the API server accepts
+  source_readings:
+  - sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  prompt: Where does Kubernetes store the user `mira` that a client certificate with
+    `CN=mira` represents?
+  options:
+  - id: a
+    text: In a User object in the kube-system namespace
+    explanation: Kubernetes has no User object.
+  - id: b
+    text: In etcd under /users
+    explanation: No such key exists.
+  - id: c
+    text: Nowhere. The name is read from the certificate.
+    explanation: Correct. The authenticator reads the Common Name and Organization
+      fields.
+  - id: d
+    text: In the ServiceAccount named mira
+    explanation: ServiceAccounts are separate identities for workloads.
+  correct_option: c
+  explanation: A valid certificate signed by the cluster CA is enough to be a user.
+- id: ats078-040-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name the credential types the API server accepts
+  source_readings:
+  - sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  prompt: Which group does the API server add to every identity that passes authentication?
+  options:
+  - id: a
+    text: system:masters
+    explanation: This group is bound to cluster-admin and is not added automatically.
+  - id: b
+    text: system:authenticated
+    explanation: Correct. It is added to all authenticated identities.
+  - id: c
+    text: system:serviceaccounts
+    explanation: Only ServiceAccount identities have this group.
+  - id: d
+    text: system:nodes
+    explanation: This group is for kubelet identities.
+  correct_option: b
+  explanation: A binding to `system:authenticated` therefore reaches every authenticated
+    caller.
+- id: ats078-040-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish authentication failure from authorization failure
+  source_readings:
+  - sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  prompt: What does `kubectl --as=system:anonymous get pods` test?
+  options:
+  - id: a
+    text: Whether the API server accepts requests with no credential
+    explanation: Impersonation never removes your own credential.
+  - id: b
+    text: The authorization decision for the impersonated identity
+    explanation: Correct. Authentication still uses your credential; authorization
+      evaluates the impersonated user.
+  - id: c
+    text: Whether anonymous authentication is enabled
+    explanation: This command cannot show the flag.
+  - id: d
+    text: The audit policy
+    explanation: Audit is not tested by this command.
+  correct_option: b
+  explanation: Impersonation changes the identity authorization sees, not how you
+    authenticate.
+- id: ats078-040-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain bound ServiceAccount tokens, their audience and lifetime
+  source_readings:
+  - sections/section-040/module-02/course-02-serviceaccount-tokens-and-client-certificates.md
+  prompt: Which property is true of a bound ServiceAccount token delivered by the
+    kubelet?
+  options:
+  - id: a
+    text: It never expires.
+    explanation: That describes a legacy token Secret.
+  - id: b
+    text: It is a signed JWT with an audience and an expiry that stops working when
+      its Pod is deleted.
+    explanation: Correct. These are the properties of a bound token.
+  - id: c
+    text: It is stored as a Secret in the namespace.
+    explanation: Bound tokens are projected into the Pod, not stored as Secrets.
+  - id: d
+    text: It is valid for any audience.
+    explanation: The audience limits which service should accept it.
+  correct_option: b
+  explanation: Bound tokens limit lifetime, audience and the object they belong to.
+- id: ats078-040-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Stop a workload from receiving a token it does not need
+  source_readings:
+  - sections/section-040/module-02/course-02-serviceaccount-tokens-and-client-certificates.md
+  prompt: 'You set `automountServiceAccountToken: false` on a ServiceAccount. What
+    happens to Pods that already run?'
+  options:
+  - id: a
+    text: The token volume is removed at once.
+    explanation: Pod volumes are fixed at creation.
+  - id: b
+    text: Nothing changes until the Pods are recreated.
+    explanation: Correct. Only new Pods use the new value.
+  - id: c
+    text: The Pods are restarted by the kubelet.
+    explanation: Changing a ServiceAccount never restarts Pods.
+  - id: d
+    text: The token is revoked.
+    explanation: The existing token stays valid until it expires or the Pod is deleted.
+  correct_option: b
+  explanation: Roll out the workload after the change.
+- id: ats078-040-q15
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Issue a user certificate through the CertificateSigningRequest
+    API
+  source_readings:
+  - sections/section-040/module-02/course-02-serviceaccount-tokens-and-client-certificates.md
+  prompt: Why should an approver read a CSR subject before approving it?
+  options:
+  - id: a
+    text: The API server rejects any subject with a group.
+    explanation: It does not; groups are allowed.
+  - id: b
+    text: The signer writes the requested user name and groups into the certificate,
+      so a request with `O=system:masters` becomes an administrator.
+    explanation: Correct. The approver is the control.
+  - id: c
+    text: Approval deletes the private key.
+    explanation: The API server never sees the private key.
+  - id: d
+    text: Approval creates a User object.
+    explanation: Kubernetes has no User objects.
+  correct_option: b
+  explanation: The approval step is the security check for CSRs.
+- id: ats078-040-q16
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Issue a user certificate through the CertificateSigningRequest
+    API
+  source_readings:
+  - sections/section-040/module-02/course-02-serviceaccount-tokens-and-client-certificates.md
+  prompt: A client certificate for `mira` was stolen. What can the cluster administrator
+    do?
+  options:
+  - id: a
+    text: Revoke it with `kubectl certificate revoke`.
+    explanation: No revoke command exists.
+  - id: b
+    text: Remove the permissions granted to mira and wait for the certificate to expire.
+    explanation: Correct. The API server has no certificate revocation list, so the
+      lifetime and the permissions are the controls.
+  - id: c
+    text: Delete the User object.
+    explanation: No User object exists.
+  - id: d
+    text: Rotate the ServiceAccount token.
+    explanation: That does not affect a client certificate.
+  correct_option: b
+  explanation: Use short `expirationSeconds` values for client certificates.

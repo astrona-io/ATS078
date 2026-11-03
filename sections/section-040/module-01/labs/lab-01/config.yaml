@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Authorization And Effective Permissions (LAB). Graded against the live cluster. Replace a wildcard Role with least privilege and remove a broad binding.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-078-lab-040-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state, including the faults
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by astrona test: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: no-wildcards
+      description: Role ops in deck has no wildcard and still exists
+      type: file
+      source: validation/validate-no-wildcards.sh
+      hint: Edit Role ops and list exact verbs, resources and API groups. Keep the Role and its binding.
+    - name: kade-allowed
+      description: kade can list pods, read pod logs and scale deployments in deck
+      type: file
+      source: validation/validate-kade-allowed.sh
+      hint: Pods need get, list and watch. Logs are pods/log. Scale is deployments/scale in the apps group with get and patch.
+    - name: kade-denied
+      description: kade cannot read Secrets, create or delete pods, or exec in deck
+      type: file
+      source: validation/validate-kade-denied.sh
+      hint: Grant only the verbs and resources kade needs. No secrets, no pods create, no exec.
+    - name: no-public-binding
+      description: No binding grants a role to system:unauthenticated and anonymous cannot list pods
+      type: file
+      source: validation/validate-no-public-binding.sh
+      hint: Find the ClusterRoleBinding that names system:unauthenticated and delete it.
+    - name: crane-intact
+      description: Deployment crane in deck is still available
+      type: file
+      source: validation/validate-crane-intact.sh
+      hint: Change only RBAC objects.
+
+teardown:
+  keepCluster: false

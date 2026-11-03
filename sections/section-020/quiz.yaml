@@ -1,0 +1,487 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats078-020
+course_id: ATS078
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-020
+  title: Secure Service Communication
+questions:
+- id: ats078-020-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a workload identity
+  source_readings:
+  - sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
+  prompt: Which part of a workload certificate carries the identity that Istio policy
+    uses?
+  options:
+  - id: a
+    text: The Subject Alternative Name, as a `spiffe://` URI.
+    explanation: Correct. The SAN holds `spiffe://<trust domain>/ns/<namespace>/sa/<service
+      account>`.
+  - id: b
+    text: The pod IP address in the certificate subject.
+    explanation: Pod IPs change, so they are not the identity.
+  - id: c
+    text: The container image name.
+    explanation: The image is not part of the certificate.
+  - id: d
+    text: The name of the Deployment.
+    explanation: The identity comes from the service account, not the Deployment.
+  correct_option: a
+  explanation: Correct. The SAN holds `spiffe://<trust domain>/ns/<namespace>/sa/<service
+    account>`.
+- id: ats078-020-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain what the sidecar certificate proves
+  source_readings:
+  - sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
+  prompt: Two Deployments in `starfleet` run as the same service account. What do
+    their sidecar certificates show?
+  options:
+  - id: a
+    text: Different identities, one per Deployment.
+    explanation: The identity is built from the service account.
+  - id: b
+    text: No identity, because Deployments are not named.
+    explanation: Both certificates carry the service account identity.
+  - id: c
+    text: The identity of the node.
+    explanation: Node identity is not used.
+  - id: d
+    text: The same identity.
+    explanation: Correct. The identity follows the service account, so a rule for
+      one also covers the other.
+  correct_option: d
+  explanation: Correct. The identity follows the service account, so a rule for one
+    also covers the other.
+- id: ats078-020-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe certificate issuance
+  source_readings:
+  - sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
+  prompt: How does a sidecar obtain its certificate?
+  options:
+  - id: a
+    text: It copies a Secret that holds the private key.
+    explanation: The key is generated inside the pod and no Secret holds it.
+  - id: b
+    text: The API server signs it when the pod is created.
+    explanation: The certificate authority in `istiod` signs it, not the API server.
+  - id: c
+    text: It generates a key, sends a signing request with its service account token
+      to `istiod`, and receives a signed certificate.
+    explanation: Correct. `istiod` validates the token and signs the identity that
+      it names.
+  - id: d
+    text: The application requests it over HTTP.
+    explanation: The proxy agent requests it.
+  correct_option: c
+  explanation: Correct. `istiod` validates the token and signs the identity that it
+    names.
+- id: ats078-020-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain rotation
+  source_readings:
+  - sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
+  prompt: A pod is deleted and its replacement starts. What stays the same in the
+    replacement sidecar certificate?
+  options:
+  - id: a
+    text: The serial number.
+    explanation: A new certificate has a new serial number.
+  - id: b
+    text: The SPIFFE identity.
+    explanation: Correct. The service account is unchanged, so `istiod` signs the
+      same identity.
+  - id: c
+    text: The private key.
+    explanation: A new pod generates a new key.
+  - id: d
+    text: The pod IP address.
+    explanation: The IP is not part of the identity.
+  correct_option: b
+  explanation: Correct. The service account is unchanged, so `istiod` signs the same
+    identity.
+- id: ats078-020-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare the mTLS modes
+  source_readings:
+  - sections/section-020/module-01/course-02-mtls-modes-and-peer-authentication.md
+  prompt: Which mode accepts both mutual TLS and plain-text connections?
+  options:
+  - id: a
+    text: "`PERMISSIVE`"
+    explanation: Correct. It is the default and exists for gradual adoption.
+  - id: b
+    text: "`STRICT`"
+    explanation: STRICT accepts only mTLS.
+  - id: c
+    text: "`DISABLE`"
+    explanation: DISABLE accepts only plain text.
+  - id: d
+    text: "`UNSET`"
+    explanation: UNSET inherits the mode from a broader policy.
+  correct_option: a
+  explanation: Correct. It is the default and exists for gradual adoption.
+- id: ats078-020-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Predict a refused client
+  source_readings:
+  - sections/section-020/module-01/course-02-mtls-modes-and-peer-authentication.md
+  prompt: A client without a sidecar sends plain HTTP to a workload under a `STRICT`
+    policy. What does it receive?
+  options:
+  - id: a
+    text: "`403` with `RBAC: access denied`."
+    explanation: 403 comes from authorization, after the connection is accepted.
+  - id: b
+    text: "`200`, because the Service port is open."
+    explanation: The strict sidecar closes plain connections.
+  - id: c
+    text: "`401` with a login page."
+    explanation: Peer authentication does not return a login page.
+  - id: d
+    text: No HTTP response, because the sidecar closes the connection.
+    explanation: Correct. `curl` reports `000` for the status.
+  correct_option: d
+  explanation: Correct. `curl` reports `000` for the status.
+- id: ats078-020-q07
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Write a port exception
+  source_readings:
+  - sections/section-020/module-01/course-02-mtls-modes-and-peer-authentication.md
+  prompt: What must a `PeerAuthentication` that sets `portLevelMtls` also have?
+  options:
+  - id: a
+    text: A namespace of `istio-system`.
+    explanation: The root namespace sets mesh-wide policy and is not required.
+  - id: b
+    text: A `when` condition.
+    explanation: PeerAuthentication has no `when` field.
+  - id: c
+    text: A `selector` that matches the workload, and the port number is the container
+      port.
+    explanation: Correct. Port-level settings need a selector and use the workload
+      port.
+  - id: d
+    text: A matching `Service` port number.
+    explanation: The setting uses the container port, not the Service port.
+  correct_option: c
+  explanation: Correct. Port-level settings need a selector and use the workload port.
+- id: ats078-020-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Predict allow-policy behavior
+  source_readings:
+  - sections/section-020/module-01/course-03-authorization-and-mesh-limits.md
+  prompt: A workload has no policy. You add one `ALLOW` policy with a rule for GET
+    from `sa/shuttle`. What happens to a request from another service account?
+  options:
+  - id: a
+    text: It is still allowed, because ALLOW only adds permissions.
+    explanation: Once an ALLOW policy selects the workload, unlisted requests are
+      denied.
+  - id: b
+    text: It is denied with `403`.
+    explanation: Correct. Requests that match no rule of an ALLOW policy are denied.
+  - id: c
+    text: It is redirected to `shuttle`.
+    explanation: Policy does not redirect requests.
+  - id: d
+    text: It is logged and allowed.
+    explanation: That would need an AUDIT action, and AUDIT does not deny.
+  correct_option: b
+  explanation: Correct. Requests that match no rule of an ALLOW policy are denied.
+- id: ats078-020-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Match ports in a rule
+  source_readings:
+  - sections/section-020/module-01/course-03-authorization-and-mesh-limits.md
+  prompt: A Service maps port 80 to container port 9898. Which value does `operation.ports`
+    in an AuthorizationPolicy use?
+  options:
+  - id: a
+    text: "`9898`"
+    explanation: Correct. The rule matches the container port.
+  - id: b
+    text: "`80`"
+    explanation: The sidecar evaluates the destination port on the pod.
+  - id: c
+    text: The node port.
+    explanation: Node ports are not used by the sidecar.
+  - id: d
+    text: The Service name.
+    explanation: A name is not a port.
+  correct_option: a
+  explanation: Correct. The rule matches the container port.
+- id: ats078-020-q10
+  type: single_choice
+  difficulty: advanced
+  learning_objective: State what remains outside the mesh
+  source_readings:
+  - sections/section-020/module-01/course-03-authorization-and-mesh-limits.md
+  prompt: A mesh enforces STRICT mTLS and an identity-based allow policy. Which risk
+    remains?
+  options:
+  - id: a
+    text: Plain text between two sidecars.
+    explanation: STRICT protects that hop.
+  - id: b
+    text: A caller without a certificate reaching the application port.
+    explanation: STRICT refuses that connection.
+  - id: c
+    text: A caller using a different service account.
+    explanation: The allow policy denies it.
+  - id: d
+    text: A caller with an allowed identity can repeat a non-idempotent request, and
+      the application must handle it.
+    explanation: Correct. Retry safety and user permissions are decided in the application.
+  correct_option: d
+  explanation: Correct. Retry safety and user permissions are decided in the application.
+- id: ats078-020-q11
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain what a signature proves
+  source_readings:
+  - sections/section-020/module-02/course-01-keys-certificates-and-chain-verification.md
+  prompt: What does a valid signature from a certificate authority on a certificate
+    show?
+  options:
+  - id: a
+    text: That the issuer's key signed exactly these fields, and the fields were not
+      changed afterward.
+    explanation: Correct. The signature covers the subject, names, public key, validity
+      and usage.
+  - id: b
+    text: That the server is safe to use for every purpose.
+    explanation: A signature does not widen the purposes in the certificate.
+  - id: c
+    text: That the private key is stored securely.
+    explanation: A signature says nothing about how the key is stored.
+  - id: d
+    text: That the certificate cannot expire.
+    explanation: Validity dates are checked separately.
+  correct_option: a
+  explanation: Correct. The signature covers the subject, names, public key, validity
+    and usage.
+- id: ats078-020-q12
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Find the trust anchor
+  source_readings:
+  - sections/section-020/module-02/course-01-keys-certificates-and-chain-verification.md
+  prompt: Why does a client accept a self-signed root CA certificate?
+  options:
+  - id: a
+    text: Because its signature is the strongest.
+    explanation: A self-signed signature is not checked against another authority.
+  - id: b
+    text: Because the root names every server.
+    explanation: A root does not name servers.
+  - id: c
+    text: Because it has no expiry.
+    explanation: Roots have validity periods too.
+  - id: d
+    text: Because the client was configured to trust it, in a file or trust store.
+    explanation: Correct. Trust in a root comes from configuration.
+  correct_option: d
+  explanation: Correct. Trust in a root comes from configuration.
+- id: ats078-020-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Diagnose a name failure
+  source_readings:
+  - sections/section-020/module-02/course-01-keys-certificates-and-chain-verification.md
+  prompt: A client connects to the API server through a name that is missing from
+    the SAN list. The chain is valid. What happens?
+  options:
+  - id: a
+    text: The connection succeeds, because the chain is valid.
+    explanation: The name check is a separate verification step.
+  - id: b
+    text: The server regenerates its certificate.
+    explanation: Servers do not change certificates on request.
+  - id: c
+    text: Verification fails, because the certificate is not valid for that name.
+    explanation: Correct. A valid chain does not replace the name check.
+  - id: d
+    text: The client falls back to a trust store.
+    explanation: A client does not widen trust after a failure.
+  correct_option: c
+  explanation: Correct. A valid chain does not replace the name check.
+- id: ats078-020-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the cluster authorities
+  source_readings:
+  - sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  prompt: Why does a kubeadm cluster have a separate CA for etcd?
+  options:
+  - id: a
+    text: Because etcd cannot use TLS.
+    explanation: etcd uses TLS with its own CA.
+  - id: b
+    text: So a certificate signed by the cluster CA is not accepted by etcd, which
+      limits what a stolen certificate reaches.
+    explanation: Correct. Each authority signs a separate group of identities.
+  - id: c
+    text: To speed up API requests.
+    explanation: The split is for trust, not speed.
+  - id: d
+    text: To store service account tokens.
+    explanation: Service account tokens use a separate key pair.
+  correct_option: b
+  explanation: Correct. Each authority signs a separate group of identities.
+- id: ats078-020-q15
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read a client identity
+  source_readings:
+  - sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  prompt: A client certificate has the subject `CN=jane, O=auditors`. How does the
+    API server see the request?
+  options:
+  - id: a
+    text: As the user `jane` in the group `auditors`.
+    explanation: Correct. CN is the user and each O is a group.
+  - id: b
+    text: As the group `jane` with the user `auditors`.
+    explanation: CN is the user and O is the group.
+  - id: c
+    text: As an anonymous user.
+    explanation: The certificate authenticates the request.
+  - id: d
+    text: As `system:masters`.
+    explanation: That group appears only if it is in the subject.
+  correct_option: a
+  explanation: Correct. CN is the user and each O is a group.
+- id: ats078-020-q16
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe issuing a certificate
+  source_readings:
+  - sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  prompt: In the CertificateSigningRequest flow, who creates the private key?
+  options:
+  - id: a
+    text: The approver, who sends it to the user.
+    explanation: The approver never needs the private key.
+  - id: b
+    text: The controller manager.
+    explanation: The signer signs a request and creates no key.
+  - id: c
+    text: The kubelet.
+    explanation: The kubelet is not part of this flow.
+  - id: d
+    text: The user, and the key never leaves their machine.
+    explanation: Correct. The request holds only the public key.
+  correct_option: d
+  explanation: Correct. The request holds only the public key.
+- id: ats078-020-q17
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Limit certificate lifetime
+  source_readings:
+  - sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  prompt: Which field on a CertificateSigningRequest limits how long the issued certificate
+    is valid?
+  options:
+  - id: a
+    text: "`usages`"
+    explanation: usages lists purposes, not duration.
+  - id: b
+    text: "`signerName`"
+    explanation: signerName chooses the authority.
+  - id: c
+    text: "`expirationSeconds`"
+    explanation: Correct. The signer issues at most this lifetime.
+  - id: d
+    text: "`request`"
+    explanation: request holds the signing request data.
+  correct_option: c
+  explanation: Correct. The signer issues at most this lifetime.
+- id: ats078-020-q18
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain missing revocation
+  source_readings:
+  - sections/section-020/module-02/course-03-rotation-expiry-and-compromise.md
+  prompt: A user's client certificate leaked. The `CertificateSigningRequest` object
+    for it is deleted. What happens to the certificate?
+  options:
+  - id: a
+    text: It stops working immediately.
+    explanation: The API server does not look up the request object.
+  - id: b
+    text: It still authenticates until it expires, because the API server checks the
+      signature, chain and time only.
+    explanation: Correct. Deleting the object does not invalidate the signed file.
+  - id: c
+    text: It is moved to a revocation list.
+    explanation: The API server has no revocation list for client certificates.
+  - id: d
+    text: It becomes valid only for `system:masters`.
+    explanation: The subject does not change.
+  correct_option: b
+  explanation: Correct. Deleting the object does not invalidate the signed file.
+- id: ats078-020-q19
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Remove all access of a leaked certificate
+  source_readings:
+  - sections/section-020/module-02/course-03-rotation-expiry-and-compromise.md
+  prompt: A leaked certificate has `CN=ops-1, O=ops`. A ClusterRoleBinding names the
+    user `ops-1`, and another names the group `ops`. You delete only the user binding.
+    What is true?
+  options:
+  - id: a
+    text: The certificate still has the access of the group binding.
+    explanation: Correct. Bindings match the user or any group, so remove both.
+  - id: b
+    text: The certificate has no access left.
+    explanation: The group binding still grants access.
+  - id: c
+    text: The certificate is revoked.
+    explanation: Removing a binding does not revoke a certificate.
+  - id: d
+    text: The group binding is deleted with the user binding.
+    explanation: Bindings are independent objects.
+  correct_option: a
+  explanation: Correct. Bindings match the user or any group, so remove both.
+- id: ats078-020-q20
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Plan a CA rotation
+  source_readings:
+  - sections/section-020/module-02/course-03-rotation-expiry-and-compromise.md
+  prompt: What is the safe order to replace a CA certificate?
+  options:
+  - id: a
+    text: Replace the CA, then give the new CA to peers.
+    explanation: Peers that lack the new CA reject the new certificates.
+  - id: b
+    text: Delete the old CA and wait for peers to fetch the new one.
+    explanation: Peers do not fetch trust automatically.
+  - id: c
+    text: Restart every pod and keep the old CA key.
+    explanation: A restart does not install the new trust.
+  - id: d
+    text: Distribute a bundle with both CAs, reissue leaf certificates from the new
+      CA, then remove the old CA.
+    explanation: Correct. Trust must exist before the new certificates are used.
+  correct_option: d
+  explanation: Correct. Trust must exist before the new certificates are used.

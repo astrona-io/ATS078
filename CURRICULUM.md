@@ -6,18 +6,18 @@ The [official objectives](https://training.linuxfoundation.org/certification/cer
 
 | Section | Official objective | Modules |
 | --- | --- | --- |
-| 010 | Observability Fundamentals: Traces, Metrics, Logs, and Events | 1 |
-| 020 | Secure Service Communication | 1 |
+| 010 | Observability Fundamentals: Traces, Metrics, Logs, and Events | 2 |
+| 020 | Secure Service Communication | 2 |
 | 030 | Policy Engines for Platform Governance | 1 |
-| 040 | Kubernetes Security Essentials | 1 |
+| 040 | Kubernetes Security Essentials | 2 |
 | 050 | Security in CI/CD Pipelines | 1 |
 
-| Section / module | Module | Teaching files |
-| --- | --- | --- |
-| 010 / 01 | Telemetry Signals, Resource Identity And Evidence Limits | Telemetry Signals, Resource Identity And Evidence Limits; Logs And Events As Evidence Beside Metrics |
-| 020 / 01 | Service Mesh Identity And Policy | Transport Protection And Mesh Limits; PKI Trust And Certificate Verification |
-| 030 / 01 | Admission Policy And Extension Trust | Admission As A Controlled Resource Decision; Applying Pod Security Requirements At Admission |
-| 040 / 01 | Authorization And Effective Permissions | RBAC Grants And Their Consequences; API Identity And ServiceAccounts |
-| 050 / 01 | Supply Chain Trust And Verification | Artifact Evidence And Sensitive Build Inputs; Connecting Verification To Execution Policy |
+| Section | Modules | Labs | Quiz |
+| --- | --- | --- | --- |
+| 010 | 2 | 2 module labs, 1 capstone | quiz.yaml |
+| 020 | 2 | 2 module labs, 1 capstone | quiz.yaml |
+| 030 | 1 | 1 module lab, 1 capstone | quiz.yaml |
+| 040 | 2 | 2 module labs, 1 capstone | quiz.yaml |
+| 050 | 1 | 1 module lab, 1 capstone | quiz.yaml |
 
-AUTHORING.yaml records measurable goals and adaptation sources. Every objective retains its section ID. All technical readings remain draft. Question banks are separate from the reading manifest and follow their declared summaries. No labs, playgrounds or runtime validation are included.
+AUTHORING.yaml records the sibling course each module was adapted from. All technical readings remain draft. Every module has a playground and a graded lab, every section has a capstone lab and a quiz, and a final domain quiz covers all sections. Labs and playgrounds are built from documentation and checked statically only; no runtime validation is claimed.

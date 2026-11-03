@@ -1,9 +1,10 @@
-# Reading-only content; YAML knowledge checks have a separate index.
+# Course manifest for ATS078. Each section lists its README, modules (landing, parts, lab Question reading and lab entry after the part tested, summary), a capstone and a quiz.
 training:
   id: ATS078
   title: 'CNPA: Platform Observability, Security, and Conformance'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CNPA: Platform Observability,
-    Security, and Conformance. Technical content remains draft. No labs or playgrounds.'
+  description: 'Concept lessons, playgrounds, graded labs, capstones and original
+    scenario quizzes for CNPA: Platform Observability, Security, and Conformance.
+    Labs run on kind (Kubernetes 1.35). Labs are built but not yet run.'
   certification:
     name: Certified Cloud Native Platform Engineering Associate
     code: CNPA
@@ -35,72 +36,338 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
-  description: 'Developed reading and reasoning for Observability Fundamentals: Traces, Metrics, Logs,
-    and Events.'
-  maturity: alpha
+  description: Makes the reader able to tell metrics, logs and events apart, write
+    and read structured log records, use Kubernetes events, correlate a symptom in
+    a metric with a log record, and judge what collection, sampling, retention and
+    sensitive data allow a log search to prove.
+  status: alpha
   content:
   - type: reading
-    title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events'
+    title: 'Observability Fundamentals: Traces, Metrics, Logs, and Events: Introduction'
     path: sections/section-010/README.md
   - type: reading
-    title: Telemetry Signals, Resource Identity And Evidence Limits
+    title: Metrics, Logs And Events As Evidence
     path: sections/section-010/module-01/course.md
   - type: reading
-    title: Telemetry Signals, Resource Identity And Evidence Limits
-    path: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+    title: Metrics, Logs And Events Compared
+    path: sections/section-010/module-01/course-01-metrics-logs-and-events-compared.md
   - type: reading
-    title: Logs And Events As Evidence Beside Metrics
-    path: sections/section-010/module-01/course-02-logs-and-events-as-evidence-beside-metrics.md
+    title: Structured Log Records And Request Identifiers
+    path: sections/section-010/module-01/course-02-structured-log-records-and-request-identifiers.md
+  - type: reading
+    title: Correlate A Failed Request With Its Log Record And Route Metric — Task
+    path: sections/section-010/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Correlate A Failed Request With Its Log Record And Route Metric
+    path: sections/section-010/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: diagnostic-evidence
+    task_kind: build
+    learning_goals:
+    - Send one failing request and find its log record from the request identifier
+    - Write a rate expression that shows which route fails
+    tags:
+    - pca
+    - logs
+    - request-id
+    resources:
+    - name: kubectl logs reference
+      url: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/
+    - name: Kubernetes logging architecture
+      url: https://kubernetes.io/docs/concepts/cluster-administration/logging/
+    - name: Prometheus querying functions
+      url: https://prometheus.io/docs/prometheus/latest/querying/functions/
+  - type: reading
+    title: Correlate A Failed Request With Its Log Record And Route Metric — Solution
+    path: sections/section-010/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: Kubernetes Events
+    path: sections/section-010/module-01/course-03-kubernetes-events.md
   - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-03-summary.md
+    path: sections/section-010/module-01/course-04-summary.md
+  - type: reading
+    title: Correlation, Sampling And Retention
+    path: sections/section-010/module-02/course.md
+  - type: reading
+    title: Correlating Metrics And Logs
+    path: sections/section-010/module-02/course-01-correlating-metrics-and-logs.md
+  - type: reading
+    title: Collection, Sampling And Retention
+    path: sections/section-010/module-02/course-02-collection-sampling-and-retention.md
+  - type: reading
+    title: Sensitive Data And Log Cost
+    path: sections/section-010/module-02/course-03-sensitive-data-and-log-cost.md
+  - type: reading
+    title: Measure Log Sampling And Find The Sensitive Field — Task
+    path: sections/section-010/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Measure Log Sampling And Find The Sensitive Field
+    path: sections/section-010/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: diagnostic-evidence
+    task_kind: build
+    learning_goals:
+    - Measure the fraction of successful requests that wrote a log record and read
+      the sampling rule from the records
+    - Name the log field that holds personal data and compare the failure ratio from
+      a counter with the error share of the log
+    tags:
+    - pca
+    - logs
+    - sampling
+    - retention
+    resources:
+    - name: Kubernetes logging architecture
+      url: https://kubernetes.io/docs/concepts/cluster-administration/logging/
+    - name: Prometheus instrumentation practices
+      url: https://prometheus.io/docs/practices/instrumentation/
+    - name: Prometheus querying functions
+      url: https://prometheus.io/docs/prometheus/latest/querying/functions/
+  - type: reading
+    title: Measure Log Sampling And Find The Sensitive Field — Solution
+    path: sections/section-010/module-02/labs/lab-01/solution.md
+  - type: reading
+    title: Distributed Traces And Trace Context
+    path: sections/section-010/module-02/course-04-distributed-traces-and-trace-context.md
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-02/course-05-summary.md
+  - type: reading
+    title: 'Logs And Events Capstone: Investigate A Failing Shop — Task'
+    path: sections/section-010/capstone/labs/lab-01/question.md
+  - type: lab
+    title: 'Logs And Events Capstone: Investigate A Failing Shop'
+    path: sections/section-010/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: diagnostic-evidence
+    task_kind: build
+    learning_goals:
+    - Join a log record, a route failure rate, the sampling fraction and the failure
+      ratio from one cluster
+    - Read the Started event of the shop pod and name the sensitive log field
+    tags:
+    - pca
+    - logs
+    - events
+    - capstone
+    resources:
+    - name: kubectl logs reference
+      url: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/
+    - name: Kubernetes logging architecture
+      url: https://kubernetes.io/docs/concepts/cluster-administration/logging/
+    - name: Event API reference
+      url: https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/
+    - name: Prometheus instrumentation practices
+      url: https://prometheus.io/docs/practices/instrumentation/
+    - name: Prometheus querying functions
+      url: https://prometheus.io/docs/prometheus/latest/querying/functions/
+  - type: reading
+    title: 'Logs And Events Capstone: Investigate A Failing Shop — Solution'
+    path: sections/section-010/capstone/labs/lab-01/solution.md
+  - type: quiz
+    title: 'Knowledge Check: Observability Fundamentals: Traces, Metrics, Logs, and
+      Events'
+    path: sections/section-010/quiz.yaml
+    pass_score: 70
 - id: module-020
   title: Secure Service Communication
-  description: Developed reading and reasoning for Secure Service Communication.
-  maturity: alpha
+  description: 'Makes the reader able to secure service-to-service traffic: mesh identity
+    and certificates, mutual TLS modes and peer authentication, authorization policy
+    and its limits, and the public key infrastructure (PKI) that backs the certificates,
+    including expiry, rotation and compromise.'
+  status: alpha
   content:
   - type: reading
-    title: Secure Service Communication
+    title: 'Secure Service Communication: Introduction'
     path: sections/section-020/README.md
   - type: reading
     title: Service Mesh Identity And Policy
     path: sections/section-020/module-01/course.md
   - type: reading
-    title: Transport Protection And Mesh Limits
-    path: sections/section-020/module-01/course-01-transport-protection-and-mesh-limits.md
+    title: Mesh Identity And Certificates
+    path: sections/section-020/module-01/course-01-mesh-identity-and-certificates.md
   - type: reading
-    title: PKI Trust And Certificate Verification
-    path: sections/section-020/module-01/course-02-pki-trust-and-certificate-verification.md
+    title: Mutual TLS Modes And Peer Authentication
+    path: sections/section-020/module-01/course-02-mtls-modes-and-peer-authentication.md
+  - type: reading
+    title: Authorization And Mesh Limits
+    path: sections/section-020/module-01/course-03-authorization-and-mesh-limits.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Require mTLS And Open One Port
+    path: sections/section-020/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: service-mesh
+    task_kind: configure
+    tags:
+    - istio
+    - mtls
+    - peerauthentication
+    - spiffe
+    learning_goals:
+    - Require mutual TLS for a namespace
+    - Open one metrics port with a port-level exception
+    - Read a workload identity from its certificate
+    resources:
+    - name: Istio security
+      url: https://istio.io/latest/docs/concepts/security/
   - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-03-summary.md
+    path: sections/section-020/module-01/course-04-summary.md
+  - type: reading
+    title: Certificates And Public Key Infrastructure
+    path: sections/section-020/module-02/course.md
+  - type: reading
+    title: Keys, Certificates And Chain Verification
+    path: sections/section-020/module-02/course-01-keys-certificates-and-chain-verification.md
+  - type: reading
+    title: Cluster PKI And Client Certificates
+    path: sections/section-020/module-02/course-02-cluster-pki-and-client-certificates.md
+  - type: reading
+    title: Rotation, Expiry And Compromise
+    path: sections/section-020/module-02/course-03-rotation-expiry-and-compromise.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Read The Cluster CA And Issue A Short-Lived Client Certificate
+    path: sections/section-020/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: pki
+    task_kind: configure
+    tags:
+    - pki
+    - certificates
+    - csr
+    - rbac
+    learning_goals:
+    - Read the cluster CA fingerprint and certificate expiry from the node
+    - Issue a one-day client certificate with the CertificateSigningRequest API
+    - Grant least-privilege access with a Role and RoleBinding
+    resources:
+    - name: Certificates and Certificate Signing Requests
+      url: https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-02/course-04-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-020/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Secure Service-To-Service Traffic With Istio
+    path: sections/section-020/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: service-mesh
+    task_kind: configure
+    tags:
+    - istio
+    - mtls
+    - authorizationpolicy
+    - spiffe
+    learning_goals:
+    - Require mutual TLS and open one port
+    - Authorize by identity, method and port
+    - Record the certificate identities
+    resources:
+    - name: Istio security
+      url: https://istio.io/latest/docs/concepts/security/
+  - type: quiz
+    title: 'Knowledge Check: Secure Service Communication'
+    path: sections/section-020/quiz.yaml
+    pass_score: 70
 - id: module-030
   title: Policy Engines for Platform Governance
-  description: Developed reading and reasoning for Policy Engines for Platform Governance.
-  maturity: alpha
+  description: 'Makes the reader able to decide what an admission rule enforces: the
+    admission chain, Pod Security Admission, validating admission policy, webhooks,
+    failure policy and exceptions.'
+  status: alpha
   content:
   - type: reading
-    title: Policy Engines for Platform Governance
+    title: 'Policy Engines for Platform Governance: Introduction'
     path: sections/section-030/README.md
   - type: reading
     title: Admission Policy And Extension Trust
     path: sections/section-030/module-01/course.md
   - type: reading
-    title: Admission As A Controlled Resource Decision
-    path: sections/section-030/module-01/course-01-admission-as-a-controlled-resource-decision.md
+    title: The Admission Chain And Built-In Controllers
+    path: sections/section-030/module-01/course-01-the-admission-chain-and-built-in-controllers.md
   - type: reading
-    title: Applying Pod Security Requirements At Admission
-    path: sections/section-030/module-01/course-02-applying-pod-security-requirements-at-admission.md
+    title: Pod Security Admission And Validating Admission Policy
+    path: sections/section-030/module-01/course-02-pod-security-admission-and-validating-admission-policy.md
+  - type: reading
+    title: Admission Webhooks, Failure And Exceptions
+    path: sections/section-030/module-01/course-03-admission-webhooks-failure-and-exceptions.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Enforce A Pod Standard And Write A Validation Policy
+    path: sections/section-030/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: admission
+    task_kind: configure
+    tags:
+    - admission
+    - pod-security
+    - validating-admission-policy
+    - cel
+    learning_goals:
+    - Enforce the restricted Pod Security level on one namespace
+    - Write a ValidatingAdmissionPolicy and a Deny binding
+    - Keep the scope to one namespace
+    resources:
+    - name: Admission Control in Kubernetes
+      url: https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/
+    - name: Validating Admission Policy
+      url: https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/
   - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-03-summary.md
+    path: sections/section-030/module-01/course-04-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-030/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Close The Admission Gaps In Starfleet
+    path: sections/section-030/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: admission
+    task_kind: configure
+    tags:
+    - admission
+    - pod-security
+    - validating-admission-policy
+    - binding
+    learning_goals:
+    - Find why a Pod Security level and a policy do not protect a namespace
+    - Raise the level and change a Warn binding to Deny
+    - Fix the namespace selector
+    resources:
+    - name: Pod Security Admission
+      url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+  - type: quiz
+    title: 'Knowledge Check: Policy Engines for Platform Governance'
+    path: sections/section-030/quiz.yaml
+    pass_score: 70
 - id: module-040
   title: Kubernetes Security Essentials
-  description: Developed reading and reasoning for Kubernetes Security Essentials.
-  maturity: alpha
+  description: 'Makes the reader able to grant least-privilege access: RBAC grants
+    and their consequences, dangerous permissions and privilege escalation, how the
+    API server authenticates a request, and ServiceAccount tokens and client certificates.'
+  status: alpha
   content:
   - type: reading
-    title: Kubernetes Security Essentials
+    title: 'Kubernetes Security Essentials: Introduction'
     path: sections/section-040/README.md
   - type: reading
     title: Authorization And Effective Permissions
@@ -109,21 +376,102 @@ modules:
     title: RBAC Grants And Their Consequences
     path: sections/section-040/module-01/course-01-rbac-grants-and-their-consequences.md
   - type: reading
-    title: API Identity And ServiceAccounts
-    path: sections/section-040/module-01/course-02-api-identity-and-serviceaccounts.md
+    title: Dangerous Permissions And Privilege Escalation
+    path: sections/section-040/module-01/course-02-dangerous-permissions-and-privilege-escalation.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Least Privilege RBAC Lab
+    path: sections/section-040/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: authorization
+    task_kind: migration
+    tags:
+    - rbac
+    - role
+    - wildcard
+    - least-privilege
+    - unauthenticated
+    - impersonation
+    learning_goals:
+    - Rewrite a wildcard Role with exact verbs and resources
+    - Prove allowed and denied actions with can-i
+    - Remove a binding to system:unauthenticated
   - type: reading
     title: Summary
     path: sections/section-040/module-01/course-03-summary.md
+  - type: reading
+    title: Authentication And Workload Credentials
+    path: sections/section-040/module-02/course.md
+  - type: reading
+    title: How The API Server Authenticates Requests
+    path: sections/section-040/module-02/course-01-api-identity-and-serviceaccounts.md
+  - type: reading
+    title: ServiceAccount Tokens And Client Certificates
+    path: sections/section-040/module-02/course-02-serviceaccount-tokens-and-client-certificates.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Workload Credentials Lab
+    path: sections/section-040/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: authentication
+    task_kind: configuration
+    tags:
+    - authentication
+    - serviceaccount
+    - token
+    - csr
+    - automount
+    - legacy-secret
+    learning_goals:
+    - Approve a CertificateSigningRequest after reading its subject
+    - Disable token automounting and replace running pods
+    - Delete a legacy token Secret and keep the workload available
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-040/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Authorization Capstone
+    path: sections/section-040/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: authorization
+    task_kind: build
+    tags:
+    - rbac
+    - cluster-admin
+    - escalate
+    - bind
+    - secrets
+    - unauthenticated
+    learning_goals:
+    - Replace a cluster-admin group binding with a namespace view binding
+    - Remove bind and escalate from a builder Role
+    - Remove Secret access and a public binding
+  - type: quiz
+    title: 'Knowledge Check: Kubernetes Security Essentials'
+    path: sections/section-040/quiz.yaml
+    pass_score: 70
 - id: module-050
   title: Security in CI/CD Pipelines
-  description: Developed reading and reasoning for Security in CI/CD Pipelines.
-  maturity: alpha
+  description: 'Makes the reader able to trace trust through a delivery pipeline:
+    artifact evidence by digest, sensitive build inputs, tying verification to an
+    execution policy, and credentials and ServiceAccount tokens of build workloads.'
+  status: alpha
   content:
   - type: reading
-    title: Security in CI/CD Pipelines
+    title: 'Security in CI/CD Pipelines: Introduction'
     path: sections/section-050/README.md
   - type: reading
-    title: Supply Chain Trust And Verification
+    title: Trust What You Deploy
     path: sections/section-050/module-01/course.md
   - type: reading
     title: Artifact Evidence And Sensitive Build Inputs
@@ -132,5 +480,66 @@ modules:
     title: Connecting Verification To Execution Policy
     path: sections/section-050/module-01/course-02-connecting-verification-to-execution-policy.md
   - type: reading
+    title: Credentials And Service Account Tokens
+    path: sections/section-050/module-01/course-03-credentials-and-service-account-tokens.md
+  - type: reading
+    title: Question
+    path: sections/section-050/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Pin Images By Digest And Mount Credentials As Files
+    path: sections/section-050/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: supply-chain
+    task_kind: build
+    tags:
+    - image-digest
+    - secret-volume
+    - serviceaccount-token
+    - least-privilege
+    learning_goals:
+    - Pin two Deployments to the digest of the image that runs
+    - Move a password from an environment variable to a Secret mounted as a read-only
+      file
+    - Stop a pod from receiving a ServiceAccount token
+    resources:
+    - name: Images
+      url: https://kubernetes.io/docs/concepts/containers/images/
+    - name: Secrets
+      url: https://kubernetes.io/docs/concepts/configuration/secret/
+  - type: reading
     title: Summary
-    path: sections/section-050/module-01/course-03-summary.md
+    path: sections/section-050/module-01/course-04-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-050/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Harden A Build Runner Workload
+    path: sections/section-050/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: supply-chain
+    task_kind: build
+    tags:
+    - image-digest
+    - secret
+    - serviceaccount
+    - rolebinding
+    - security-context
+    learning_goals:
+    - Give a workload its own ServiceAccount without a token and remove a broad RoleBinding
+    - Pin the image by digest and replace an environment token with a mounted Secret
+    - Apply a hardened container security context and keep the workload available
+    resources:
+    - name: Configure Service Accounts for Pods
+      url: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+    - name: Security context
+      url: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  - type: quiz
+    title: 'Knowledge Check: Security in CI/CD Pipelines'
+    path: sections/section-050/quiz.yaml
+    pass_score: 70
+  - type: quiz
+    title: 'Final Knowledge Check: Platform Observability, Security, and Conformance'
+    path: sections/final-domain-quiz.yaml
+    pass_score: 70

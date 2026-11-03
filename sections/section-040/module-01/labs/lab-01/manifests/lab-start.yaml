@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: deck
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ops
+  namespace: deck
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ops-kade
+  namespace: deck
+subjects:
+  - kind: User
+    name: kade
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: ops
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: public-read
+subjects:
+  - kind: Group
+    name: system:unauthenticated
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crane
+  namespace: deck
+  labels:
+    app: crane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crane
+  template:
+    metadata:
+      labels:
+        app: crane
+    spec:
+      containers:
+        - name: crane
+          image: ghcr.io/stefanprodan/podinfo:6.15.0
+          ports:
+            - containerPort: 9898
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi

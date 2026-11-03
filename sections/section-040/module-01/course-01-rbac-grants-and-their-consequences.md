@@ -1,39 +1,114 @@
 ---
 draft: true
 exam_objectives:
-- Kubernetes Security Essentials
+- 'Kubernetes Security Essentials'
 ---
 # RBAC Grants And Their Consequences
 
-The `shuttle` identity only needs to read Pods in `outpost`. Role-Based Access Control (RBAC) grants actions on resource types to identities through roles and bindings. A Role describes permissions within a namespace, while a ClusterRole is a cluster-scoped definition that can describe namespaced or cluster-scoped permissions.
+After authentication, the API server asks its authorizers whether the identity may perform the request. This part covers what the authorizer looks at, how Roles and bindings combine, and how to test the result for any identity.
 
-A RoleBinding grants permissions within its own namespace. It can refer to a Role in that namespace or a ClusterRole. Referencing a ClusterRole through a RoleBinding does not turn the grant into a cluster-wide grant. A ClusterRoleBinding grants the referenced ClusterRole at cluster scope.
+## Authorization modes
 
-Rules distinguish resource types and verbs. Permission to get one object's data differs from permission to list a collection, watch changes, create objects or delete them. The application programming interface (API) group also matters. A rule for core Pods does not automatically cover Deployments in another group.
+The `--authorization-mode` flag on the API server lists the authorizers in order. A typical cluster uses `Node,RBAC`. The Node authorizer lets each kubelet read only the objects that belong to Pods scheduled on its node. RBAC handles everyone else. A Webhook authorizer can call an external service.
 
-Least privilege means granting only the permissions needed for a defined job. Read access to Secrets is sensitive because it can reveal credentials. Permission to create Pods may also enable access to mounted data or workload identities, depending on other controls. A superficially narrow verb can still have important indirect effects.
+The authorizers are asked in order. The first one that allows the request ends the process. If one denies, or if none has an opinion, the request is refused. A mode that always allows, `AlwaysAllow`, turns authorization off and must never be used outside a test cluster.
 
-RBAC permissions are additive: another applicable binding may grant an action that one role omits. Removing a rule from one role does not guarantee the identity loses permission if another binding still grants it. Scope and all applicable grants must be considered.
+## What authorization sees
 
-For the `shuttle` scenario, a namespace-scoped read grant fits better than a cluster-wide administrative binding. Check the subject, verbs, resources and namespace together. A binding with the right role but the wrong ServiceAccount or namespace does not satisfy the intended access.
+The API server builds a set of attributes from each request:
 
-## Building A Narrow Read Grant
+- the user name and groups from authentication
+- the verb: `get`, `list`, `watch`, `create`, `update`, `patch`, `delete` or a special verb such as `bind`
+- the API group and resource, for example `apps` and `deployments`
+- the subresource, for example `pods/log` or `deployments/scale`
+- the resource name, when the request targets one object
+- the namespace, for namespaced resources
 
-Assume `shuttle` in `outpost` needs to retrieve Pod details in that namespace. A suitable Role can allow the relevant read verbs on core Pods, and a RoleBinding can identify the intended ServiceAccount. The namespace of the binding determines where the grant applies. The ServiceAccount subject also needs the correct namespace so it identifies the expected workload identity.
+Authorization never reads the body of the request. It cannot decide that a Pod is allowed only when it has a certain image. That is the job of admission.
 
-If the same permission definition is useful in several namespaces, a ClusterRole can be reused through separate RoleBindings. That reuse does not make every binding cluster-wide. A ClusterRoleBinding has different scope and should only be used when the required access justifies it.
+## Roles, ClusterRoles and bindings
 
-The difference between `get`, `list` and `watch` matters. Getting a known object requests one record. Listing obtains a collection. Watching streams subsequent changes. A component that watches a collection commonly needs a combination appropriate to its workflow rather than a vague “read” label. Rules should match the actual API operations.
+A Role holds rules in one namespace. A ClusterRole holds rules that can apply to cluster-scoped resources, such as nodes, or to every namespace. A rule lists API groups, resources, verbs and optionally resource names. Nothing in a Role says who receives it.
 
-## Indirect Privileges And Additive Grants
+A RoleBinding gives the rules of a Role or ClusterRole to subjects in one namespace. A ClusterRoleBinding gives the rules of a ClusterRole to subjects in every namespace and for cluster-scoped resources. A RoleBinding that points at a ClusterRole is a common and useful pattern: it reuses the rule list but limits it to one namespace.
 
-A grant to read Secrets can reveal credentials for another service. A grant to create Pods can expose a route to mounted data or workload identities, subject to the cluster's other controls. Permission analysis should therefore ask what the identity can accomplish through the resources it may create or read, not only whether the verb sounds harmless.
+```mermaid
+flowchart LR
+    S["Subject: user, group or ServiceAccount"] -->|"is named by"| B["RoleBinding or ClusterRoleBinding"]
+    B -->|"points at"| R["Role or ClusterRole"]
+    R -->|"lists"| P["Rules: groups, resources, verbs"]
+    P -->|"all matching rules are added"| E["Effective permissions"]
+```
 
-Several bindings can apply to one caller through its username or groups. Effective permissions are the union of those grants. Removing a broad rule from one Role is insufficient if a ClusterRoleBinding still grants it elsewhere. RBAC does not express a general explicit-deny rule that cancels another grant.
+## Rules only add
 
-Review the subject, group memberships, verb, API group, resource and namespace together. A correct role with the wrong binding subject fails to provide needed access; a correct subject with an overly broad binding grants more than intended. Least privilege is the narrowest working combination of these fields and the surrounding admission protections.
+An identity may be named in many bindings, directly and through groups. Every rule reached is added to the set of permissions. There is no way to subtract. If a user holds a `view` grant and a separate grant to delete Pods, the user can delete Pods. To remove a permission you must remove or narrow the rule or binding that gives it, and the binding may belong to a group the user is in.
+
+Aggregated ClusterRoles combine rules from other ClusterRoles through labels. The built-in `view`, `edit` and `admin` roles are aggregated. Adding a ClusterRole with the label `rbac.authorization.k8s.io/aggregate-to-view: "true"` widens `view` for everyone who has it.
+
+## Create a Role and test it
+
+Renew the playground and save this as `role-pod-reader.yaml`:
+
+<!-- astrona:playground:renew -->
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: starfleet
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-reader-mira
+  namespace: starfleet
+subjects:
+  - kind: User
+    name: mira
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+Apply it and ask the API server what `mira` may do:
+
+```sh
+kubectl apply -f role-pod-reader.yaml
+kubectl auth can-i list pods -n starfleet --as=mira
+kubectl auth can-i get pods --subresource=log -n starfleet --as=mira
+kubectl auth can-i delete pods -n starfleet --as=mira
+kubectl auth can-i list pods -n outpost --as=mira
+```
+
+The first two answers are `yes`. The last two are `no`: no rule grants `delete`, and the binding exists only in `starfleet`. The command `kubectl auth can-i --list --as=mira -n starfleet` prints every rule that reaches her, including the rules that all authenticated users receive.
+
+## Rules are matched literally
+
+The core API group is the empty string. Deployments are in `apps`. A rule with `resources: ["pods"]` does not cover `pods/log` or `pods/exec`. Subresources must be named. A rule with `resourceNames` limits `get`, `update`, `patch` and `delete` to named objects, but `list`, `watch` and `create` cannot be limited that way, because the object name is not known when the request is made.
+
+A `roleRef` is immutable. To point a binding at another role you delete and recreate it. This prevents someone who can edit bindings from quietly changing what an existing binding grants.
+
+## Testing an identity from the other side
+
+When a request fails with 403, the message gives the user, the verb, the resource and the namespace. Compare those with the rules you expect. A common mistake is a Role in one namespace and a request in another. The `kubectl auth can-i` command is only a hint, because it asks the API server for the answer but cannot show which rule matched. To find the matching rules, list bindings that mention the subject:
+
+```sh
+kubectl get rolebindings,clusterrolebindings -A -o json | jq -r '.items[] | select(any(.subjects[]?; .name == "mira")) | .kind + " " + .metadata.name'
+```
 
 ## Common pitfalls
 
 > [!WARNING]
-> A RoleBinding to a ClusterRole still grants permissions in the binding's namespace. RBAC grants combine; an omitted rule is not an explicit denial.
+> - Expecting a Role to deny something. RBAC rules only add.
+> - Granting `resources: ["pods"]` and expecting log or exec access to follow, or the opposite: granting `pods/*` and receiving exec access.
+> - Using a ClusterRoleBinding where a RoleBinding to the same ClusterRole would have limited the grant to one namespace.
+> - Trusting `resourceNames` to limit `list` or `create`. It cannot.
+> - Testing with your own administrator credentials. Impersonate the identity with `--as` and `--as-group`.

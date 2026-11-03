@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ward
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: builder-sa
+  namespace: ward
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: reader-sa
+  namespace: ward
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: crew-admin
+subjects:
+  - kind: Group
+    name: crew
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rolemaker
+  namespace: ward
+rules:
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings"]
+    verbs: ["get", "list", "create", "update", "bind", "escalate"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolemaker-builder
+  namespace: ward
+subjects:
+  - kind: ServiceAccount
+    name: builder-sa
+    namespace: ward
+roleRef:
+  kind: Role
+  name: rolemaker
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: config-reader
+  namespace: ward
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: config-reader-reader
+  namespace: ward
+subjects:
+  - kind: ServiceAccount
+    name: reader-sa
+    namespace: ward
+roleRef:
+  kind: Role
+  name: config-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: public-pods
+  namespace: ward
+subjects:
+  - kind: Group
+    name: system:unauthenticated
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scout
+  namespace: ward
+  labels:
+    app: scout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scout
+  template:
+    metadata:
+      labels:
+        app: scout
+    spec:
+      containers:
+        - name: scout
+          image: ghcr.io/stefanprodan/podinfo:6.15.0
+          ports:
+            - containerPort: 9898
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
