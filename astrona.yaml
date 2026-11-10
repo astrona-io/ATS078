@@ -205,7 +205,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: service-mesh
-    task_kind: configure
+    task_kind: build
     tags:
     - istio
     - mtls
@@ -242,7 +242,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: pki
-    task_kind: configure
+    task_kind: build
     tags:
     - pki
     - certificates
@@ -267,7 +267,7 @@ modules:
     difficulty: advanced
     estimated_duration: 35m
     topic: service-mesh
-    task_kind: configure
+    task_kind: build
     tags:
     - istio
     - mtls
@@ -315,7 +315,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 25m
     topic: admission
-    task_kind: configure
+    task_kind: build
     tags:
     - admission
     - pod-security
@@ -342,7 +342,7 @@ modules:
     difficulty: advanced
     estimated_duration: 35m
     topic: admission
-    task_kind: configure
+    task_kind: build
     tags:
     - admission
     - pod-security
@@ -420,7 +420,7 @@ modules:
     difficulty: intermediate
     estimated_duration: 20m
     topic: authentication
-    task_kind: configuration
+    task_kind: build
     tags:
     - authentication
     - serviceaccount
